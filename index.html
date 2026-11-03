@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>311 Streetlight Outage Map - NYC</title>
-<meta name="description" content="Mapping chronic street light outages across New York City using 311 complaint data. Hexagonal grid reveals neighborhood-level dark zones.">
+<meta name="description" content="Mapping chronic street light outages across New York City using 311 complaint data. A hexagonal grid shows where complaints cluster by neighborhood.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -346,7 +346,7 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
   <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;">
     <details style="font-size:11px;color:var(--text-dim);line-height:1.6;">
       <summary style="cursor:pointer;color:var(--text-secondary);font-size:11px;margin-bottom:8px;">Methodology and definitions</summary>
-      <p style="margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border-left:2px solid var(--text-dim);border-radius:2px;"><strong style="color:var(--text-secondary);">A note on 311 data:</strong> Complaint volume reflects who has called 311, not an objective measure of where streetlight problems exist. Neighborhoods differ in their propensity for using the 311 system, and some outages are never reported. This data is an important signal of where residents see a problem, but it is subject to reporting bias and should not be treated as a complete inventory of dark streets.</p>
+      <p style="margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border-left:2px solid var(--text-dim);border-radius:2px;"><strong style="color:var(--text-secondary);">A note on 311 data:</strong> Complaint volume reflects who has called 311, not an objective measure of where streetlight problems exist. Neighborhoods differ in their propensity for using the 311 system, and some outages are never reported. This data is a signal of where residents see a problem, but it is subject to reporting bias and should not be treated as a complete inventory of dark streets.</p>
       <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Source:</strong> NYC 311 complaints filed as "Street Light Condition" via the NYC Open Data API, starting Jan. 1, 2024.</p>
       <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Included complaint types:</strong> Street Light Out, Multiple Street Lights Out, Street Light Lamp Dim, Street Light Lamp Missing, Fixture/Luminaire Out of Position, Fixture/Luminaire Damaged, Fixture/Luminaire Missing and Flood Light Lamp Out.</p>
       <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Not included:</strong> Traffic signals, pedestrian signals or any non-streetlight complaints. These have separate 311 categories.</p>

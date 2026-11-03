@@ -1,6 +1,6 @@
 # 311 streetlight outage map: methodology and data reference
 
-This document details every data source, filter, calculation and design decision in the streetlight outage map. Nothing is a black box.
+This document details every data source, filter, calculation and design decision in the streetlight outage map.
 
 ---
 
@@ -56,7 +56,7 @@ Only complaints whose `descriptor` field exactly matches one of these eight valu
 
 All eight fall under the umbrella complaint type "Street Light Condition." Other complaint types in the same category (e.g., "Street Light Cycling On and Off") are not included because they don't indicate a dark condition.
 
-**What these descriptors mean:** These are complaints about pole-mounted streetlights that illuminate public streets and sidewalks. Traffic signals and pedestrian signals have entirely separate 311 categories ("Traffic Signal Condition") and are not included.
+**What these descriptors mean:** These are complaints about pole-mounted streetlights that illuminate public streets and sidewalks. Traffic signals and pedestrian signals have separate 311 categories ("Traffic Signal Condition") and are not included.
 
 ---
 
@@ -78,9 +78,9 @@ After retrieving complaints matching the descriptors above, the app applies a se
 
 **Why exclude these?** The map focuses on streetlights that illuminate ordinary streets and sidewalks where people walk and drive at night. Park lights, highway lights and bridge lights are maintained by different agencies (NYC Parks, DOT highway division) and serve different purposes. Including them would muddy the picture.
 
-**What this means in practice:** A complaint at "123 ATLANTIC AVE" passes the filter. A complaint at "PROSPECT PARK WEST AND PARK CIRCLE" is excluded because it contains "park." A complaint at "FDR DRIVE AND E 62 ST" is excluded because it contains "FDR."
+**Examples:** A complaint at "123 ATLANTIC AVE" passes the filter. A complaint at "PROSPECT PARK WEST AND PARK CIRCLE" is excluded because it contains "park." A complaint at "FDR DRIVE AND E 62 ST" is excluded because it contains "FDR."
 
-**Known limitation:** This is pattern-based, not perfect. A complaint at "123 PARK AVE" would be incorrectly excluded because the address contains "park." A complaint at a location inside a park but filed with a regular street address would be incorrectly included. For the vast majority of complaints, the filter works correctly.
+**Known limitation:** The filter matches patterns and makes mistakes. A complaint at "123 PARK AVE" would be incorrectly excluded because the address contains "park." A complaint at a location inside a park but filed with a regular street address would be incorrectly included. For the vast majority of complaints, the filter works correctly.
 
 ---
 
@@ -331,13 +331,13 @@ All 311 complaint data is fetched live from the NYC Open Data API at page load. 
 
 ## 14. Known limitations and caveats
 
-1. **311 complaints reflect who has called, not where problems exist.** Complaint volume is a measure of reporting behavior, not an objective inventory of streetlight outages. Neighborhoods differ in their propensity for using the 311 system, and many outages are never reported. Areas with lower complaint counts may have just as many dark streetlights as areas with higher counts — they may simply have fewer residents who know to call 311 or who believe it will make a difference. This data is an important signal of where residents see a problem, but it is subject to reporting bias and should not be treated as a complete picture of dark streets.
+1. **311 complaints reflect who has called, not where problems exist.** Complaint volume is a measure of reporting behavior, not an objective inventory of streetlight outages. Neighborhoods differ in their propensity for using the 311 system, and many outages are never reported. Areas with lower complaint counts may have just as many dark streetlights as areas with higher counts — they may have fewer residents who know to call 311 or who believe it will make a difference. This data is a signal of where residents see a problem, but it is subject to reporting bias and should not be treated as a complete picture of dark streets.
 
 2. **Address-based filtering is imperfect.** The word-matching exclusion filter can produce false positives (e.g., "Park Ave" is excluded because it contains "park") and false negatives (a park complaint filed with a nearby street address would be included).
 
 3. **Location clustering is approximate.** The ~50-meter grid may group complaints about different streetlights that happen to be near each other, or may separate complaints about the same light that straddle a grid boundary.
 
-4. **"Still open" reflects 311 status, not reality.** A complaint marked "open" in 311 may have already been fixed but not yet closed in the system. Conversely, a "closed" complaint may have been closed without the light actually being repaired.
+4. **"Still open" is a 311 status.** A complaint marked "open" in 311 may have already been fixed but not yet closed in the system. Conversely, a "closed" complaint may have been closed without the light actually being repaired.
 
 5. **Census tract assignment can miss edge cases.** Complaints on tract boundaries or in water/unmapped areas won't be assigned to any tract. These still appear in hex grid and point views but are absent from census tract rankings.
 

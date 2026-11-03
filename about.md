@@ -2,7 +2,7 @@
 
 ## What it shows
 
-This interactive map visualizes every 311 complaint about a broken or malfunctioning streetlight in New York City since Jan. 1, 2024. It draws on more than 50,000 complaints to reveal which blocks, neighborhoods and police precincts have the worst and most persistent outage problems.
+This interactive map visualizes every 311 complaint about a broken or malfunctioning streetlight in New York City since Jan. 1, 2024. It draws on more than 50,000 complaints to show which blocks, neighborhoods and police precincts have the worst and most persistent outage problems.
 
 The map offers several views:
 
@@ -14,7 +14,7 @@ Rankings can be viewed three ways:
 
 - **By address** shows the individual locations with the most repeat complaints.
 - **By census tract** shows total complaints per 2020 census tract.
-- **Per square mile** normalizes by census tract area, revealing which tracts have the highest concentration of outages relative to their size.
+- **Per square mile** normalizes by census tract area, showing which tracts have the highest concentration of outages relative to their size.
 
 Clicking any dot or hex cell shows details including address, neighborhood, complaint count and how many are still open.
 
@@ -31,7 +31,7 @@ The data covers eight complaint descriptors from the 311 "Street Light Condition
 - Fixture/Luminaire Missing
 - Flood Light Lamp Out
 
-These are all complaints about pole-mounted streetlights that illuminate streets and sidewalks. Traffic signals and pedestrian signals have entirely separate 311 categories and are not included.
+These are all complaints about pole-mounted streetlights that illuminate streets and sidewalks. Traffic signals and pedestrian signals have separate 311 categories and are not included.
 
 ## What's excluded
 
@@ -59,7 +59,7 @@ The map is a single HTML file with no build step or server-side code. It runs en
 
 - **More than 50,000 streetlight outage complaints** have been filed since Jan. 2024.
 - **Bedford-Stuyvesant, Brownsville and East New York** dominate the list of worst individual repeat locations, with some addresses logging 20 to 33 complaints.
-- Normalizing by census tract area reveals the **highest outage concentrations** in dense neighborhoods across Manhattan, the Bronx and Brooklyn, rather than the sprawling tracts that dominate raw counts.
+- Normalizing by census tract area puts the **highest outage concentrations** in dense neighborhoods across Manhattan, the Bronx and Brooklyn. The sprawling tracts lead the raw counts.
 - Roughly **900 complaints remain open** at any given time.
 
 ## Tools and libraries
