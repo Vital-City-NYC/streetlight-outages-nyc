@@ -130,15 +130,15 @@ Uses Uber's H3 hexagonal spatial indexing library at **resolution 8**.
 
 | Complaints | Fill color | Opacity |
 |---|---|---|
-| 1-7 | Dark olive | 0.08 |
-| 8-19 | Muted olive | 0.20 |
-| 20-39 | Dark amber | 0.35 |
-| 40-64 | Amber-orange | 0.50 |
-| 65-89 | Red-orange | 0.70 |
-| 90-119 | Deep red | 0.85 |
-| 120+ | Bright red | 0.95 |
+| 1-9 | Dark olive | 0.08 |
+| 10-29 | Muted olive | 0.20 |
+| 30-59 | Dark amber | 0.35 |
+| 60-94 | Amber-orange | 0.50 |
+| 95-129 | Red-orange | 0.70 |
+| 130-159 | Deep red | 0.85 |
+| 160+ | Bright red | 0.95 |
 
-These breakpoints were set manually after examining the distribution of complaints per hex cell in an earlier snapshot (p10=7, p25=20, p50=42, p75=68, p90=94, max=189). They have not been reset for the current data.
+The breakpoints sit near the 10th, 25th, 50th, 75th, 90th and 97th percentiles of complaints per hex cell in the Nov. 5, 2026, snapshot (1,071 cells: p10=10, p25=28, p50=61, p75=97, p90=130, p97=159, max=252), rounded. They are fixed numbers: a later live refresh with more complaints will shift cells toward the red end until the breaks are reset. Earlier versions used 8, 20, 40, 65, 90 and 120, set the same way on the smaller March 2026 data.
 
 **Popup contents (click a hex cell):** Total complaints, neighborhood name, borough, number still open in 311 and the top 3 addresses within that cell.
 

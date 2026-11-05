@@ -298,10 +298,10 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
     <div class="legend-gradient"></div>
     <div class="legend-labels">
       <span>1</span>
-      <span>20</span>
-      <span>40</span>
-      <span>90</span>
-      <span>120+</span>
+      <span>30</span>
+      <span>60</span>
+      <span>130</span>
+      <span>160+</span>
     </div>
   </div>
 
@@ -477,13 +477,15 @@ function renderDataStatus(state) {
 }
 
 function getHexColor(count) {
-  // Distribution: p10=7, p25=20, p50=42, p75=68, p90=94, max=189
-  if (count >= 120) return { fill: 'rgba(220,10,10,0.95)', stroke: 'rgba(255,40,40,0.85)' };
-  if (count >= 90) return { fill: 'rgba(200,20,20,0.85)', stroke: 'rgba(240,40,40,0.7)' };
-  if (count >= 65) return { fill: 'rgba(190,40,35,0.7)', stroke: 'rgba(220,55,50,0.55)' };
-  if (count >= 40) return { fill: 'rgba(180,70,30,0.5)', stroke: 'rgba(200,80,40,0.4)' };
-  if (count >= 20) return { fill: 'rgba(160,100,30,0.35)', stroke: 'rgba(180,110,40,0.25)' };
-  if (count >= 8) return { fill: 'rgba(130,115,50,0.2)', stroke: 'rgba(150,130,60,0.15)' };
+  // Breaks sit near the 10th, 25th, 50th, 75th, 90th and 97th percentiles of
+  // complaints per cell in the Nov. 5, 2026, snapshot (1,071 cells):
+  // p10=10, p25=28, p50=61, p75=97, p90=130, p97=159, max=252
+  if (count >= 160) return { fill: 'rgba(220,10,10,0.95)', stroke: 'rgba(255,40,40,0.85)' };
+  if (count >= 130) return { fill: 'rgba(200,20,20,0.85)', stroke: 'rgba(240,40,40,0.7)' };
+  if (count >= 95) return { fill: 'rgba(190,40,35,0.7)', stroke: 'rgba(220,55,50,0.55)' };
+  if (count >= 60) return { fill: 'rgba(180,70,30,0.5)', stroke: 'rgba(200,80,40,0.4)' };
+  if (count >= 30) return { fill: 'rgba(160,100,30,0.35)', stroke: 'rgba(180,110,40,0.25)' };
+  if (count >= 10) return { fill: 'rgba(130,115,50,0.2)', stroke: 'rgba(150,130,60,0.15)' };
   return { fill: 'rgba(80,80,50,0.08)', stroke: 'rgba(100,100,60,0.05)' };
 }
 
