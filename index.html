@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>311 Streetlight Outage Map - NYC</title>
-<meta name="description" content="Mapping chronic street light outages across New York City using 311 complaint data. A hexagonal grid shows where complaints cluster by neighborhood.">
+<title>311 Streetlight Complaint Map - NYC</title>
+<meta name="description" content="Mapping 311 streetlight complaints across New York City. A hexagonal grid shows where complaints cluster by neighborhood.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -258,8 +258,8 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
 
 <div id="panel">
   <div class="cp-label">Rubber meets road<span class="cp-label-slash">/</span><span class="cp-label-rest">Lighting: 311 street light complaints</span></div>
-  <h1 class="cp-title">311 streetlight <em>outage</em> map</h1>
-  <p class="cp-desc">Each colored zone shows how many streetlight outage complaints have been filed with NYC 311 in that area since January 2024 — darker red means more reports. Switch to "all spots" to see individual addresses where outages keep coming back.</p>
+  <h1 class="cp-title">311 streetlight <em>complaint</em> map</h1>
+  <p class="cp-desc">Each colored zone shows how many streetlight complaints were filed with 311 in that area since Jan. 1, 2024. Darker red means more complaints. Switch to &ldquo;all spots&rdquo; to see locations with multiple streetlight complaints.</p>
 
   <div id="address-search" style="margin-bottom:14px;position:relative;">
     <input type="text" id="search-input" placeholder="Search an address..." style="width:100%;padding:9px 36px 9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;" />
@@ -282,13 +282,15 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
       <div class="value orange" id="stat-open">--</div>
     </div>
     <div class="stat-card">
-      <div class="label">Worst spot</div>
+      <div class="label">Address with the most complaints</div>
       <div class="value" id="stat-worst" style="font-size:13px;line-height:1.3;">--</div>
     </div>
   </div>
 
   <div class="note" style="font-size:11px;color:var(--text-dim);background:var(--bg);border-radius:6px;padding:8px 10px;margin-bottom:12px;line-height:1.5;">
-    Note: Parks, bridges, expressways, and other non-street locations are excluded.
+    <div id="data-status" style="margin-bottom:6px;color:var(--text-secondary);">Loading data&hellip;</div>
+    <div style="margin-bottom:6px;">Counts are 311 service requests, not unique failed lights or separate outages. Several requests may concern the same unresolved condition or different lights near one another.</div>
+    <div id="scope-note">The map covers ordinary streets and sidewalks. Requests at parks, other named places, highways and bridges are left out.</div>
   </div>
 
   <div class="legend">
@@ -322,7 +324,7 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
   </div>
 
   <div class="filter-section" style="margin-top:4px;">
-    <label>Chronic dark spots</label>
+    <label>Locations with repeated complaints</label>
     <div class="view-toggle chronic-toggle">
       <button class="view-btn" data-view="chronic10">10+ complaints</button>
       <button class="view-btn" data-view="chronic20">20+ complaints</button>
@@ -339,7 +341,7 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
   </div>
 
   <div class="top-list">
-    <div class="top-list-title" id="top-list-title">Worst repeat locations</div>
+    <div class="top-list-title" id="top-list-title">Addresses with the most complaints</div>
     <div id="top-items"></div>
   </div>
 
@@ -347,24 +349,25 @@ html, body { height: 100%; overflow: hidden; font-family: var(--font); backgroun
     <details style="font-size:11px;color:var(--text-dim);line-height:1.6;">
       <summary style="cursor:pointer;color:var(--text-secondary);font-size:11px;margin-bottom:8px;">Methodology and definitions</summary>
       <p style="margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,0.03);border-left:2px solid var(--text-dim);border-radius:2px;"><strong style="color:var(--text-secondary);">A note on 311 data:</strong> Complaint volume reflects who has called 311, not an objective measure of where streetlight problems exist. Neighborhoods differ in their propensity for using the 311 system, and some outages are never reported. This data is a signal of where residents see a problem, but it is subject to reporting bias and should not be treated as a complete inventory of dark streets.</p>
-      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Source:</strong> NYC 311 complaints filed as "Street Light Condition" via the NYC Open Data API, starting Jan. 1, 2024.</p>
-      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Included complaint types:</strong> Street Light Out, Multiple Street Lights Out, Street Light Lamp Dim, Street Light Lamp Missing, Fixture/Luminaire Out of Position, Fixture/Luminaire Damaged, Fixture/Luminaire Missing and Flood Light Lamp Out.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Source:</strong> New York City 311 service requests filed as &ldquo;Street Light Condition&rdquo; via the NYC Open Data API, starting Jan. 1, 2024.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Included complaint types:</strong> Street Light Out, Multiple Street Lights Out, Street Light Lamp Dim, Street Light Lamp Missing, Fixture/Luminaire Out of Position, Fixture/Luminaire Damaged, Fixture/Luminaire Missing and Flood Light Lamp Out. These cover dim lamps and damaged or displaced fixtures as well as lights reported out, so they are broader than confirmed outages.</p>
       <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Not included:</strong> Traffic signals, pedestrian signals or any non-streetlight complaints. These have separate 311 categories.</p>
-      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Excluded locations:</strong> Parks, playgrounds, bridges, expressways, parkways, highways, cemeteries, greenways and other non-street infrastructure are filtered out by address pattern matching.</p>
-      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Repeat locations:</strong> Complaints are grouped to roughly 50-meter blocks. A "repeat location" has two or more complaints at the same spot.</p>
-      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Chronic dark spots:</strong> Locations with 10 or more (or 20 or more) total outage complaints since Jan. 2024, depending on the view selected.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Excluded locations:</strong> The map focuses on ordinary streets and sidewalks. It leaves out requests that 311 recorded as a place name (parks, playgrounds, bridges, waterfront paths and similar), requests located at a named NYC Parks property, requests on a listed limited-access highway or a bridge roadway without a house number, and addresses beginning with &ldquo;999.&rdquo; This is the project&rsquo;s chosen scope; it does not mean all such lights are maintained by a different agency. Some requests filed with an ordinary street address inside a park are still counted.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Repeat locations:</strong> Complaints are grouped into grid cells about 55 meters north-south by 42 meters east-west. These are grid cells, not individual lamps or blocks. A &ldquo;repeat location&rdquo; has two or more complaints in the same cell.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Locations with repeated complaints:</strong> Grid cells with 10 or more (or 20 or more) complaints since Jan. 1, 2024, depending on the view selected. The count alone does not show whether the complaints describe one unresolved problem, several nearby lights or separate failures.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Address ranking:</strong> Complaints are grouped by the address text 311 recorded, together with borough and the neighborhood mapped from the community board. Complaints filed at an intersection without an address are not in this ranking.</p>
+      <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Open and closed:</strong> These are 311 statuses. A closed request does not necessarily mean the light was repaired.</p>
       <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Per square mile:</strong> Total complaints divided by the census tract's geographic area in square miles, using 2020 census tract boundary data from NYC Open Data.</p>
       <p style="margin-bottom:8px;"><strong style="color:var(--text-secondary);">Neighborhoods:</strong> Derived from NYC community board boundaries mapped to common neighborhood names.</p>
-      <p style="margin-top:12px;"><a href="methodology.md" target="_blank" style="color:var(--accent);text-decoration:underline;">Full methodology document</a> — data sources, calculations, filters and limitations.</p>
+      <p style="margin-top:12px;"><a href="methodology.md" target="_blank" style="color:var(--text-secondary);text-decoration:underline;">Full methodology document</a>: data sources, calculations, filters and limitations.</p>
     </details>
   </div>
 </div>
 
+<script src="scope.js"></script>
 <script>
-const API_BASE = 'https://data.cityofnewyork.us/resource/erm2-nwe9.json';
-const DATE_STR = '2024-01-01T00:00:00';
-
 let allComplaints = [];
+let dataMeta = null;   // metadata of the data currently shown
 let map, hexLayer, pointLayer;
 let currentView = 'hex';
 
@@ -411,91 +414,66 @@ function getNeighborhood(communityBoard) {
   return CB_NEIGHBORHOODS[`${boro}-${num}`] || '';
 }
 
-const DARK_DESCRIPTORS = new Set([
-  'Street Light Out', 'Multiple Street Lights Out', 'Street Light Lamp Dim',
-  'Street Light Lamp Missing', 'Fixture/Luminaire Out Of Position',
-  'Fixture/Luminaire Damaged', 'Fixture/Luminaire Missing', 'Flood Light Lamp Out'
-]);
-
-const EXCLUDE_PATTERNS = [
-  /^999\s/i,
-  /\bpark\b/i, /\bplayground\b/i, /\brecreation\b/i,
-  /\bmeadows?\b/i, /\bgreenbelt\b/i, /\bbotanical\b/i,
-  /\bbridge\b/i, /\bgreenway\b/i, /\besplanade\b/i,
-  /\bpier\b/i, /\bboardwalk\b/i, /\bbeach\b/i,
-  /\briver\b/i, /\bpromenade\b/i, /\bcemetery\b/i,
-  /\bpkwy\b/i, /\bparkway\b/i, /\bexpwy\b/i, /\bexpressway\b/i, /\bexpy\b/i,
-  /\bhighway\b/i, /\bhwy\b/i, /\bturnpike\b/i, /\btpke\b/i, /\bstadium\b/i,
-  /\bisland\b/i, /\bfield\b/i, /\bgarden\b/i, /\bplaza\b/i,
-  /\bfdr\b/i, /\bdeegan\b/i, /\bbruckner\b/i, /\bbqe\b/i,
-  /\binterchange\b/i, /\boverpass\b/i, /\bramp\b/i
-];
-
-function filterComplaints(raw) {
-  return raw.filter(c => {
-    if (!DARK_DESCRIPTORS.has(c.descriptor)) return false;
-    const addr = c.incident_address || '';
-    if (EXCLUDE_PATTERNS.some(p => p.test(addr))) return false;
-    return true;
-  });
-}
-
-// Load pre-built static data file (fast, from CDN)
+// Load the stored snapshot (fast, from the CDN). It was built with the same
+// rules in scope.js, so its rows are already filtered.
 async function loadStaticData() {
   const res = await fetch('complaints.json');
   if (!res.ok) throw new Error(`Static file: HTTP ${res.status}`);
   const data = await res.json();
-
-  // Expand compact format back to full objects
-  const descriptors = data.d;
-  const boroMap = data.b;
-  const expanded = data.c.map(r => ({
-    latitude: String(r[0]),
-    longitude: String(r[1]),
-    descriptor: descriptors[r[2]],
-    created_date: r[3],
-    incident_address: r[4],
-    borough: boroMap[r[5]] || r[5],
-    community_board: r[6],
-    status: r[7] === 1 ? 'Open' : 'Closed'
-  }));
-  // Apply EXCLUDE_PATTERNS to the static cache too — the cache was built
-  // before the 999-prefixed placeholder rule existed, so pre-built rows
-  // still contain "999 [Street]" placeholders that we want to drop.
-  return filterComplaints(expanded);
+  return { meta: metaOf(data), rows: StreetlightScope.unpack(data) };
 }
 
-// Background API refresh to catch new complaints since static file was built
-async function fetchFromAPI() {
-  const limit = 50000;
-  let offset = 0;
-  let retries = 0;
-  const raw = [];
+// Full download from NYC Open Data. Throws on any incomplete download.
+async function fetchLive() {
+  const parksRes = await fetch('parks-names.json');
+  if (!parksRes.ok) throw new Error(`Park names: HTTP ${parksRes.status}`);
+  StreetlightScope.setParkNames((await parksRes.json()).names);
+  const { rows } = await StreetlightScope.fetchAll311();
+  const data = StreetlightScope.pack(rows);
+  return { meta: metaOf(data), rows: StreetlightScope.unpack(data) };
+}
 
-  const where = `complaint_type='Street Light Condition' AND created_date>'${DATE_STR}' AND latitude IS NOT NULL AND incident_address NOT LIKE '999 %'`;
+function metaOf(data) {
+  return { generated: data.g, latest: data.latest, excluded: data.excluded || null, live: false, checkedAt: null };
+}
 
-  while (true) {
-    const url = `${API_BASE}?$where=${encodeURIComponent(where)}&$select=descriptor,created_date,latitude,longitude,incident_address,borough,community_board,status&$limit=${limit}&$offset=${offset}&$order=created_date+DESC`;
+const AP_MONTHS = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+function apDate(d) {
+  if (!d) return '';
+  const dt = typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(d + 'T12:00:00') : new Date(d);
+  if (isNaN(dt)) return '';
+  return `${AP_MONTHS[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`;
+}
+function apTime(d) {
+  const h = d.getHours(), m = d.getMinutes();
+  const hh = h % 12 || 12;
+  return `${hh}:${String(m).padStart(2, '0')} ${h < 12 ? 'a.m.' : 'p.m.'}`;
+}
 
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      if (!data.length) break;
-
-      raw.push(...data);
-      offset += limit;
-      retries = 0;
-      if (data.length < limit) break;
-      await new Promise(r => setTimeout(r, 50));
-    } catch (err) {
-      retries++;
-      if (retries > 3) break;
-      await new Promise(r => setTimeout(r, 1000 * retries));
-    }
+// state: 'snapshot' | 'checking' | 'live' | 'failed'
+function renderDataStatus(state) {
+  const el = document.getElementById('data-status');
+  if (!el || !dataMeta) return;
+  const span = `Requests filed Jan. 1, 2024, through ${apDate(dataMeta.latest)}.`;
+  let text;
+  if (state === 'live') {
+    text = `${span} Updated from NYC Open Data at ${apTime(dataMeta.checkedAt)} on ${apDate(dataMeta.checkedAt)}.`;
+  } else if (state === 'failed') {
+    text = `${span} The live update from NYC Open Data did not complete, so this is the stored snapshot retrieved ${apDate(dataMeta.generated)}.`;
+  } else if (state === 'checking') {
+    text = `${span} Stored snapshot retrieved ${apDate(dataMeta.generated)}; checking NYC Open Data for updates&hellip;`;
+  } else {
+    text = `${span} Stored snapshot retrieved ${apDate(dataMeta.generated)}.`;
   }
+  el.innerHTML = text;
+  el.style.color = state === 'failed' ? 'var(--orange)' : 'var(--text-secondary)';
 
-  return filterComplaints(raw);
+  const ex = dataMeta.excluded;
+  const note = document.getElementById('scope-note');
+  if (ex && note) {
+    const n = v => (v || 0).toLocaleString();
+    note.innerHTML = `The map covers ordinary streets and sidewalks. Left out citywide: ${n(ex.place + ex.park)} requests at parks and other named places, ${n(ex.highway + ex.bridge)} on highways and bridges, ${n(ex.placeholder)} with addresses beginning with &ldquo;999&rdquo; and ${n(ex.no_coordinates)} without map coordinates.`;
+  }
 }
 
 function getHexColor(count) {
@@ -577,7 +555,7 @@ function buildHexLayer(complaints) {
 
     const openBadge = data.openCount > 0
       ? `<span style="color:#db6d28;font-weight:600;">${data.openCount} still open</span>`
-      : '<span style="color:#57aa4a;">All resolved</span>';
+      : '<span style="color:#8b949e;">All closed in 311</span>';
 
     const polygon = L.polygon(latlngs, {
       fillColor: colors.fill,
@@ -649,7 +627,7 @@ function buildPointLayer(complaints) {
 
     const openBadge = cl.openCount > 0
       ? `<span style="color:#db6d28;font-weight:600;">${cl.openCount} still open</span>`
-      : '<span style="color:#57aa4a;">All resolved</span>';
+      : '<span style="color:#8b949e;">All closed in 311</span>';
 
     const marker = L.circleMarker([avgLat, avgLng], {
       radius: getPointRadius(cl.count),
@@ -807,7 +785,7 @@ function renderTopList(complaints, addrSorted) {
   if (currentRank === 'tract' || currentRank === 'density') {
     const isDensity = currentRank === 'density';
     document.getElementById('top-list-title').textContent = isDensity
-      ? 'Outages per square mile (by census tract)'
+      ? 'Complaints per square mile (by census tract)'
       : 'Complaints by census tract';
 
     if (!censusTractData) {
@@ -868,7 +846,7 @@ function renderTopList(complaints, addrSorted) {
       topItems.appendChild(div);
     });
   } else {
-    document.getElementById('top-list-title').textContent = 'Worst repeat locations';
+    document.getElementById('top-list-title').textContent = 'Addresses with the most complaints';
 
     if (!addrSorted) {
       addrSorted = [];
@@ -903,7 +881,8 @@ let chronicLayer10 = null;
 let chronicLayer20 = null;
 
 function buildChronicLayer(complaints, minCount = 20) {
-  // Find locations with complaints in BOTH 2024 and 2025
+  // Grid cells (about 55 by 42 meters) with at least minCount complaints.
+  // The count does not require complaints separated in time or a repair in between.
   const locData = new Map();
 
   for (const c of complaints) {
@@ -930,7 +909,6 @@ function buildChronicLayer(complaints, minCount = 20) {
 
   const layer = L.layerGroup();
 
-  // Only keep locations with complaints in both years AND 4+ total
   const chronic = [...locData.entries()]
     .filter(([, d]) => d.count >= minCount)
     .sort((a, b) => b[1].count - a[1].count);
@@ -985,14 +963,14 @@ function buildChronicLayer(complaints, minCount = 20) {
 
     const openBadge = loc.openCount > 0
       ? `<span style="color:#db6d28;font-weight:600;">${loc.openCount} still open</span>`
-      : '<span style="color:#57aa4a;">All resolved</span>';
+      : '<span style="color:#8b949e;">All closed in 311</span>';
 
     const yearList = [...loc.years].sort().join(', ');
 
     marker.bindPopup(`
       <div style="min-width:200px;">
         <div style="margin-bottom:4px;">
-          <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:#f85149;font-weight:600;">Chronic dark spot</span>
+          <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:#f85149;font-weight:600;">Repeated complaints</span>
         </div>
         <div style="margin-bottom:8px;">
           <strong style="font-size:14px;">${titleCase(topAddr)}</strong><br>
@@ -1000,7 +978,7 @@ function buildChronicLayer(complaints, minCount = 20) {
         </div>
         <div style="display:flex;gap:16px;margin-bottom:8px;">
           <div>
-            <div style="font-size:10px;color:#6e7681;text-transform:uppercase;">Total</div>
+            <div style="font-size:10px;color:#6e7681;text-transform:uppercase;">Complaints</div>
             <div style="font-size:22px;font-weight:700;color:#f85149;">${loc.count}</div>
           </div>
           <div>
@@ -1110,55 +1088,50 @@ async function init() {
   // Start loading census tracts in background
   const tractPromise = loadCensusTracts();
 
-  function rebuildMap() {
-    if (hexLayer) map.removeLayer(hexLayer);
-    if (pointLayer) map.removeLayer(pointLayer);
-    if (chronicLayer10) map.removeLayer(chronicLayer10);
-    if (chronicLayer20) map.removeLayer(chronicLayer20);
-
-    hexLayer = buildHexLayer(allComplaints);
-    pointLayer = buildPointLayer(allComplaints);
-    chronicLayer10 = buildChronicLayer(allComplaints, 10);
-    chronicLayer20 = buildChronicLayer(allComplaints, 20);
-
-    if (currentView === 'hex') map.addLayer(hexLayer);
-    else if (currentView === 'chronic10') map.addLayer(chronicLayer10);
-    else if (currentView === 'chronic20') map.addLayer(chronicLayer20);
-    else map.addLayer(pointLayer);
-
-    updateStats(allComplaints);
+  function showData(result) {
+    allComplaints = result.rows;
+    dataMeta = result.meta;
+    applyFilters();
   }
 
-  // Step 1: Load static file (fast, ~600KB gzipped from CDN)
+  // Step 1: Load the stored snapshot
   document.querySelector('.loading-text').textContent = 'Loading complaint data...';
+  let fromSnapshot = true;
   try {
-    const staticData = await loadStaticData();
-    allComplaints = staticData;
-    document.getElementById('load-count').textContent = allComplaints.length.toLocaleString();
-    rebuildMap();
-    document.getElementById('loading-overlay').classList.add('hidden');
+    showData(await loadStaticData());
   } catch (err) {
     console.warn('Static file failed, falling back to API:', err);
+    fromSnapshot = false;
     document.querySelector('.loading-text').textContent = 'Fetching NYC 311 data...';
-    allComplaints = await fetchFromAPI();
-    document.getElementById('load-count').textContent = allComplaints.length.toLocaleString();
-    rebuildMap();
-    document.getElementById('loading-overlay').classList.add('hidden');
+    const live = await fetchLive();
+    live.meta.live = true;
+    live.meta.checkedAt = new Date();
+    showData(live);
   }
+  document.getElementById('load-count').textContent = allComplaints.length.toLocaleString();
+  document.getElementById('loading-overlay').classList.add('hidden');
+  renderDataStatus(fromSnapshot ? 'checking' : 'live');
 
   // Step 2: Assign census tracts
   await tractPromise;
   assignCensusTracts(allComplaints);
+  if (currentRank !== 'address') renderTopList(lastFilteredComplaints);
 
-  // Step 3: Background API refresh for any newer complaints
-  fetchFromAPI().then(fresh => {
-    if (fresh.length > allComplaints.length + 10) {
-      // Meaningful new data — rebuild
-      allComplaints = fresh;
-      rebuildMap();
-      assignCensusTracts(allComplaints);
-    }
-  }).catch(() => { /* silent — static data is good enough */ });
+  // Step 3: Replace the snapshot with a complete live download whenever one
+  // succeeds, whether the count rose, fell or stayed the same. A failed or
+  // partial download leaves the snapshot in place and says so.
+  if (fromSnapshot) {
+    fetchLive().then(live => {
+      live.meta.live = true;
+      live.meta.checkedAt = new Date();
+      assignCensusTracts(live.rows);
+      showData(live);
+      renderDataStatus('live');
+    }).catch(err => {
+      console.warn('Live refresh failed; keeping snapshot:', err);
+      renderDataStatus('failed');
+    });
+  }
 
   // Listeners
   document.getElementById('borough-filter').addEventListener('change', applyFilters);

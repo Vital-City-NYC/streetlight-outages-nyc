@@ -1,22 +1,22 @@
-# 311 streetlight outage map
+# 311 streetlight complaint map
 
 ## What it shows
 
-This interactive map visualizes every 311 complaint about a broken or malfunctioning streetlight in New York City since Jan. 1, 2024. It draws on more than 50,000 complaints to show which blocks, neighborhoods and police precincts have the worst and most persistent outage problems.
+This interactive map shows 311 service requests about broken, dim or damaged streetlights in New York City since Jan. 1, 2024. Counts are service requests, not unique failed lights or separate outages: several requests may concern the same unresolved condition or different lights near one another.
 
 The map offers several views:
 
 - **Hex grid** shows complaint density across the city using a hexagonal grid. Darker red hexes have more complaints. This is the best view for seeing broad geographic patterns.
-- **All spots** plots every complaint location as a dot, with size and color scaled to the number of repeat complaints at that spot.
-- **Chronic dark spots (10+ and 20+)** isolate the locations with the highest complaint totals — places where streetlights have been reported out again and again. These appear as pulsing circles, with faster pulses indicating more complaints.
+- **All spots** plots complaint locations as dots, grouped into grid cells about 55 by 42 meters, with size and color scaled to the number of complaints in each cell.
+- **Locations with repeated complaints (10+ and 20+)** isolate the grid cells with the highest complaint totals. These appear as pulsing circles, with faster pulses indicating more complaints. A high count does not show whether the complaints describe one unresolved problem, several nearby lights or separate failures.
 
 Rankings can be viewed three ways:
 
-- **By address** shows the individual locations with the most repeat complaints.
+- **By address** shows the addresses with the most complaints, grouped by address text, borough and neighborhood.
 - **By census tract** shows total complaints per 2020 census tract.
-- **Per square mile** normalizes by census tract area, showing which tracts have the highest concentration of outages relative to their size.
+- **Per square mile** shows complaints per square mile of census tract area.
 
-Clicking any dot or hex cell shows details including address, neighborhood, complaint count and how many are still open.
+Clicking any dot or hex cell shows details including address, neighborhood, complaint count and how many are still open in 311. A closed request does not necessarily mean the light was repaired.
 
 ## What's included
 
@@ -31,40 +31,35 @@ The data covers eight complaint descriptors from the 311 "Street Light Condition
 - Fixture/Luminaire Missing
 - Flood Light Lamp Out
 
-These are all complaints about pole-mounted streetlights that illuminate streets and sidewalks. Traffic signals and pedestrian signals have separate 311 categories and are not included.
+These are complaints about pole-mounted streetlights. They include dim lamps and damaged or displaced fixtures, so they are broader than confirmed outages. Traffic signals and pedestrian signals have separate 311 categories and are not included.
 
 ## What's excluded
 
-Complaints at parks, playgrounds, bridges, expressways, parkways, highways, cemeteries, greenways and other non-street locations are filtered out by address pattern matching. The goal is to focus on the streetlights that illuminate ordinary streets and sidewalks where people walk and drive at night.
+The map focuses on ordinary streets and sidewalks. It leaves out requests that 311 recorded as a place name (parks, playgrounds, bridges, waterfront paths and similar), requests located at a named NYC Parks property, requests on a listed limited-access highway or bridge roadway without a house number, and addresses beginning with "999." This is the project's chosen scope; it does not mean all such lights are maintained by a different agency. Ordinary streets such as Park Avenue, Eastern Parkway and Bruckner Boulevard are included. The [methodology](methodology.md) lists every rule and its limits.
 
 ## How it was built
 
-The map is a single HTML file with no build step or server-side code. It runs entirely in the browser.
+The page is static, with no server-side code.
 
-**Data source:** NYC Open Data's 311 Service Requests dataset (endpoint: `erm2-nwe9`), queried live via the Socrata API. The app fetches all matching complaints in 5,000-record batches and caches the results in the browser's localStorage for six hours so repeat visits load faster.
+**Data source:** NYC Open Data's 311 Service Requests dataset (`erm2-nwe9`). The page first loads a stored snapshot (`complaints.json`), then downloads the current data from the Socrata API in pages of 50,000 records. A complete download replaces the snapshot; an incomplete one leaves the snapshot in place, and the page says which one is showing. The snapshot is rebuilt with `node scripts/build-data.js`, which applies the same rules.
 
 **Map:** Built with Leaflet.js on CARTO dark basemap tiles.
 
-**Hex grid:** Uses Uber's H3 spatial indexing library (resolution 8, roughly 0.7 square kilometers per cell) to aggregate complaints into hexagonal cells.
+**Hex grid:** Uses Uber's H3 spatial indexing library at resolution 8 (average area about 0.74 square kilometers per cell).
 
-**Chronic dark spots:** Locations are clustered to approximately 50-meter blocks by rounding coordinates. The 10+ and 20+ views show locations exceeding those complaint thresholds.
+**Census tract assignment:** 2020 census tract boundaries from NYC Open Data (`63ge-mke6`), simplified and stored in the repository. Each complaint is assigned to a tract with a point-in-polygon test. Per-square-mile rates use the tract's `shape_area` field (converted from square feet). Tracts with fewer than three complaints are left out of the density view.
 
-**Census tract assignment:** 2020 census tract boundaries are loaded from NYC Open Data (`weqx-t5xr`) and each complaint is assigned to a tract using a bounding-box-accelerated ray-casting point-in-polygon algorithm. Per-square-mile rates are calculated from the tract boundary's `shape_area` field (converted from square feet). Tracts with fewer than three complaints are filtered from the density view to reduce noise from small or low-population tracts.
+**Neighborhoods:** Mapped from community board codes to common neighborhood names using a built-in lookup table covering all 59 community boards.
 
-**Neighborhoods:** Mapped from NYC community board codes to common neighborhood names using a built-in lookup table covering all 59 community boards.
+## In the Nov. 5, 2026, snapshot
 
-**Progressive loading:** The map appears after the first batch of data arrives (a few seconds) rather than waiting for all 60,000+ records. Data continues loading in the background and the map updates when complete.
-
-## Key findings
-
-- **More than 50,000 streetlight outage complaints** have been filed since Jan. 2024.
-- **Bedford-Stuyvesant, Brownsville and East New York** dominate the list of worst individual repeat locations, with some addresses logging 20 to 33 complaints.
-- Normalizing by census tract area puts the **highest outage concentrations** in dense neighborhoods across Manhattan, the Bronx and Brooklyn. The sprawling tracts lead the raw counts.
-- Roughly **900 complaints remain open** at any given time.
+- **71,997 requests** filed Jan. 1, 2024, through Nov. 4, 2026, are mapped; 3,880 were open in 311 when the data was retrieved.
+- The address with the most requests is **286 Thomas Boyland Street** in Brownsville, with 27.
+- These figures change with each refresh, and they describe reporting, not an inventory of dark streets.
 
 ## Tools and libraries
 
-- [Leaflet.js](https://leafletjs.com/) — mapping
-- [H3-js](https://h3geo.org/) — hexagonal spatial indexing
-- [CARTO](https://carto.com/) — dark basemap tiles
-- [NYC Open Data](https://opendata.cityofnewyork.us/) — 311 complaints and precinct boundaries
+- [Leaflet.js](https://leafletjs.com/): mapping
+- [H3-js](https://h3geo.org/): hexagonal spatial indexing
+- [CARTO](https://carto.com/): dark basemap tiles
+- [NYC Open Data](https://opendata.cityofnewyork.us/): 311 complaints, Parks Properties and census tracts
